@@ -1,0 +1,76 @@
+.rqeuest-container {
+    grid-area: rqeuest;
+}
+
+.requestBody-container {
+    grid-area: body;
+}
+
+.result-container {
+    grid-area: result;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+            'rqeuest'
+            'body'
+            'result';
+    grid-gap: 10px;
+    padding: 10px;
+}
+
+.grid-container > div {
+    padding: 10px;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+}
+
+input {
+    padding: 4px 4px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+    box-sizing: border-box;
+    height: 50px;
+    width: 400px;
+}
+
+select {
+    line-height: 100px;
+    font-size: 14px;
+    padding: 15px 15px;
+    margin: 15px 0;
+}
+input[type=button] {
+    width: 100px;
+    background-color: royalblue;
+    color: white;
+    padding: 10px 15px;
+    margin: 6px 0;
+    border: 1px solid royalblue;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.result-container{
+    border: 1px groove darkorange;
+    border-radius: 5px;
+    width: 50%;
+    box-shadow: 0 0 10px silver;
+    padding: 4px 4px;
+    margin: 4px 5px;
+    display: inline-block;
+    box-sizing: border-box;
+}
+textarea{
+    width: 50%;
+    outline: none !important;
+    border:1px solid darkorange;
+    box-shadow: 0 0 10px silver;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}

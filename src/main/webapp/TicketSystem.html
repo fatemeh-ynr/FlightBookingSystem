@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Ticket Booking</title>
+<!--    <link rel="stylesheet" href="styles/TicketSystem.css">-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        .flightBox {
+            grid-area: flight;
+        }
+
+        .bookingBox {
+            grid-area: booking;
+        }
+
+        .updateBox {
+            grid-area: crud;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-areas:
+            'flight flight'
+            'booking crud';
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+        .grid-container > div {
+            padding: 10px;
+            border: 1px groove silver;
+            border-radius: 10px;
+            font-family: "IranYekanRegular", Tahoma, Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333333;
+        }
+
+        .flightBox {
+            display: flex;
+        }
+
+        .flightSearchBoxes {
+            width: 30%;
+        }
+
+        .flightsList {
+            width: 70%;
+        }
+
+        input, .combo {
+            width: 200px;
+            padding: 4px 4px;
+            margin: 4px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type=button] {
+            width: 150px;
+            background-color: royalblue;
+            color: white;
+            padding: 10px 15px;
+            margin: 6px 0;
+            border: 1px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+
+<body>
+<div class="grid-container">
+    <div class="flightBox">
+        <div class="flightSearchBoxes">
+            <label for="departureCity">From: </label><br>
+            <select id="departureCity" class="combo">
+                <option>Tehran</option>
+                <option>Shiraz</option>
+                <option>Kerman</option>
+                <option>Mashhad</option>
+            </select><br><br>
+
+            <label for="arrivalCity">To: </label><br>
+            <select id="arrivalCity" class="combo">
+                <option>Shiraz</option>
+                <option>Tehran</option>
+                <option>Kerman</option>
+                <option>Mashhad</option>
+            </select><br><br>
+
+            <label for="departureDate">Departure Date: </label><br>
+            <input type="text" id="departureDate"><br><br>
+
+            <input type="button" id="SearchButton" value="Search Flights">
+        </div>
+        <div class="flightsList">
+            <p id="AvailableFlights"></p>
+        </div>
+    </div>
+
+    <div class="bookingBox">
+        <label for="flightNumber">Flight Number: </label><br>
+        <input type="text" id="flightNumber" required><br>
+        <label for="passengerName">Passenger Name: </label><br>
+        <input type="text" id="passengerName" name="passengerName" required><br>
+        <input type="button" id="BookingButton" value="Book The Flight">
+        <p id="BookingStatus"></p>
+    </div>
+
+    <div class="updateBox">
+        <label for="ticketNumber">Ticket Number: </label><br>
+        <input type="text" id="ticketNumber" required><br>
+        <label for="passengerNameforUpdate">New Passenger Name (for update): </label><br>
+        <input type="text" id="passengerNameforUpdate" name="passengerNameforUpdate"><br>
+        <label for="action">Action: </label><br>
+        <select id="action" class="combo">
+            <option>Show</option>
+            <option>Delete</option>
+            <option>Update</option>
+        </select>
+        <input type="button" id="SubmitActionButton" value="Submit">
+        <p id="UpdateStatus"></p>
+    </div>
+</div>
+
+
+<!--================================================================================-->
+<script>
+    $("#SearchButton").click(function () {
+        var departureCity = $("#departureCity :selected").text();
+        var arrivalCity = $("#arrivalCity :selected").text();
+        var departureDate = $('#departureDate').val();
+
+        $.post("FlightsSearchServlet",
+            {
+                'departureCity': departureCity,
+                'arrivalCity': arrivalCity,
+                'departureDate': departureDate
+            }
+            , function (data, status) {
+                $("#AvailableFlights").text("");//clear
+                $("#AvailableFlights").append(data);
+            });
+    });
+
+
+    $("#BookingButton").click(function () {
+        var flightNumber = $("#flightNumber").val();
+        var passengerName = $("#passengerName").val();
+
+        if (flightNumber != "" && passengerName != "") {
+            $.post("TicketBookingServlet",
+                {
+                    'flightNumber': flightNumber,
+                    'passengerName': passengerName
+                }
+                , function (data, status) {
+                    $("#BookingStatus").text("");//clear
+                    $("#BookingStatus").append(data);
+                });
+        } else {
+            $("#BookingStatus").text("\"Flight Number\" and \"Passenger Name\" fields cannot be empty.")
+        }
+    });
+
+
+    $("#SubmitActionButton").click(function () {
+        var action = $("#action :selected").text();
+        var ticketNumber = $('#ticketNumber').val();
+        var passengerNameforUpdate = $('#passengerNameforUpdate').val();
+
+        if (ticketNumber != "") {
+            $.post("TicketCRUDServlet",
+                {
+                    'action': action,
+                    'ticketNumber': ticketNumber,
+                    'passengerNameforUpdate' : passengerNameforUpdate
+                }
+                , function (data, status) {
+                console.error("error:" +data)
+                    $("#UpdateStatus").text("");//clear
+                    $("#UpdateStatus").append(data);
+                });
+        } else {
+            $("#UpdateStatus").text("\"Ticket Number\" field cannot be empty.")
+        }
+    });
+</script>
+</body>
+</html>

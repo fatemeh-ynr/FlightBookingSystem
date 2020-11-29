@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RESTClient</title>
+    <link rel="stylesheet" href="styles/RESTClient.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="grid-container">
+
+    <div class="request-container">
+        <select id="methods">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+        </select>
+
+        <input type="text" id="webServerURL" class="webServerURL">
+        <input type="button" id="sendButton" value="Send">
+    </div>
+    <div class="requestBody-container">
+        <label for="body">Body </label><br><br>
+        <textarea id="body" rows="10"  name="body" value=""></textarea>
+    </div>
+    <div class="result-container">
+    <!-- <label for="result">Result </label><br>-->
+        <pre id="result"></pre>
+    </div>
+</div>
+
+
+<!--================================================================================-->
+<script>
+    $("#sendButton").click(function () {
+        $("#result").text("");//clear
+
+        var method = $("#methods :selected").text();
+        var webServerURL = $("#webServerURL").val();
+        var bodyText = $("#body").val();
+        console.error("body:" + bodyText);
+        console.error("url: " + webServerURL);
+
+        if (method == "GET") {
+            $.get(
+                webServerURL, function (data, status) {
+                    $("#result").append(JSON.stringify(data, undefined, 2));
+                });
+
+        } else if (method == "POST") {
+            $.ajax({
+                url: webServerURL,
+                type: 'POST',
+                data: bodyText,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data, status) {
+                    $("#result").append(JSON.stringify(data, undefined, 2));
+                },
+                error: function (errormessage) {
+                    $("#result").append(JSON.stringify(errormessage.responseText, undefined, 2));
+                }
+            });
+        }
+        else if (method == "PUT") {
+            $.ajax({
+                url: webServerURL,
+                type: 'PUT',
+                data: bodyText,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data, status) {
+                    $("#result").append(JSON.stringify(data, undefined, 2));
+                }
+            });
+        }
+        else if (method == "DELETE") {
+            $.ajax({
+                url: webServerURL,
+                type: 'DELETE',
+                success: function (data, status) {
+                    $("#result").append(data);
+                }
+            });
+        }
+    });
+
+</script>
+</body>
+</html>
