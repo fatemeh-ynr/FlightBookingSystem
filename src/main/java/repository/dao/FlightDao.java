@@ -35,9 +35,12 @@ public class FlightDao<T, PK extends Serializable> extends GenericDaoImpl<Flight
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         Criteria criteria = session.createCriteria(Flight.class);
-        criteria.add(Restrictions.eq("departureCity", flight.getDepartureCity()));
-        criteria.add(Restrictions.eq("arrivalCity", flight.getArrivalCity()));
-        criteria.add(Restrictions.sqlRestriction("Year(departureDateTime) = ? ", flight.getDepartureDateTime(), StandardBasicTypes.DATE));
+        if (flight.getDepartureCity() != null)
+            criteria.add(Restrictions.eq("departureCity", flight.getDepartureCity()));
+        if (flight.getArrivalCity() != null)
+            criteria.add(Restrictions.eq("arrivalCity", flight.getArrivalCity()));
+        if (flight.getDepartureDateTime() != null)
+            criteria.add(Restrictions.sqlRestriction("date(departureDateTime) = ? ", flight.getDepartureDateTime(), org.hibernate.type.StandardBasicTypes.DATE));
         flights = criteria.list();
         flights.forEach(System.out::println);
         transaction.commit();

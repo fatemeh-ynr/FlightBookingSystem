@@ -23,4 +23,5 @@ public class FlightService {
     public List<Flight> findByCityAndDate(Flight flight) {
         return flightDao.findByCityAndDate(flight);
     }
+
 }

@@ -6,6 +6,8 @@ import service.TicketService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 public class TicketRest {
 
     TicketService ticketService;
+    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm a");
 
     public TicketRest() {
         ticketService = TicketService.getInstance();
@@ -22,13 +25,17 @@ public class TicketRest {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Ticket getTicket(@PathParam("id") int ticketNumber) {
-        return ticketService.read(ticketNumber);
+        Ticket ticket= ticketService.read(ticketNumber);
+        ticket.getFlight().setDepartureDate(dateFormat.format(ticket.getFlight().getDepartureDateTime()));
+        return ticket;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Ticket> getAllTickets() {
-        return ticketService.getAll();
+        List<Ticket> tickets = ticketService.getAll();
+        tickets.forEach(availableFlight -> availableFlight.getFlight().setDepartureDate(dateFormat.format(availableFlight.getFlight().getDepartureDateTime())));
+        return tickets;
     }
 
     @POST
@@ -40,8 +47,10 @@ public class TicketRest {
     }
 
     @PUT
-    //@Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Ticket updateTicket(Ticket ticket) {
+        System.out.println("hi put");
+        System.out.println(ticket.getTicketNumber());
         return ticketService.updateTicket(ticket);
     }
 

@@ -2,6 +2,7 @@ package repository.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Entity
@@ -11,6 +12,8 @@ public class Flight {
     private String departureCity;
     private String arrivalCity;
     private Date departureDateTime;
+    @Transient
+    private String departureDate;
 
     public Flight(int flightNumber) {
         this.flightNumber = flightNumber;
@@ -49,6 +52,14 @@ public class Flight {
 
     public void setDepartureDateTime(Date departureDateTime) {
         this.departureDateTime = departureDateTime;
+    }
+
+    public String getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(String departureDate) {
+        this.departureDate = departureDate;
     }
 
     @Override

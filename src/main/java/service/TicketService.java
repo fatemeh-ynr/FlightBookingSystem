@@ -27,11 +27,13 @@ public class TicketService {
 
     public int bookTicket(Ticket ticket) {
         if (ticket != null) {
-            if (!ticketDao.isTicketAvailableByFlightNumberPassengerName(ticket)) {
-                try {
-                    return ticketDao.create(ticket);
-                } catch (ConstraintViolationException exception) {
-                    throw new RuntimeException("The flight is not available");
+            if (ticket.getPassengerName() != null && !ticket.getPassengerName().equals("")) {
+                if (!ticketDao.isTicketAvailableByFlightNumberPassengerName(ticket)) {
+                    try {
+                        return ticketDao.create(ticket);
+                    } catch (ConstraintViolationException exception) {
+                        throw new RuntimeException("The flight is not available");
+                    }
                 }
             }
         }
@@ -70,7 +72,7 @@ public class TicketService {
         return ticketDao.selectAll();
     }
 
-    public boolean deleteAll(){
+    public boolean deleteAll() {
         return ticketDao.deleteAll();
     }
 

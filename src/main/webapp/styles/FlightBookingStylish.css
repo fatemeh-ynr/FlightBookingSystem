@@ -1,0 +1,12 @@
+/*.backgroundimag{*/
+/*    !*background-image: url("/images/flight-booking-system.jpg");*!*/
+/*    background: url("#{resource['images/flight-booking-system.jpg']}");*/
+/*}*/
+
+.navbar-custom {
+    background-color: rebeccapurple;
+}
+
+.navbar-text {
+    color: white;
+}
